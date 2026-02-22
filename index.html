@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALL ODDS | Powered by FENG Industries</title>
+    <title>ALL ODDS | Daily Predictions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -14,159 +14,351 @@
                         'obsidian-base': '#0a0a0a',
                         'obsidian-surface': '#171717',
                         'neon-accent': '#00ffcc',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        'neon-hover': '#00e6b8',
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom glowing effects for the Uncle Scar Studio aesthetic */
-        .glow-button:hover {
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Custom scrollbar for a sleek studio feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ffcc; }
     </style>
 </head>
-<body class="bg-obsidian-base text-gray-100 font-sans min-h-screen p-4 md:p-8">
+<body class="bg-obsidian-base text-gray-100 font-sans min-h-screen p-4 md:p-6">
 
-    <div class="max-w-6xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-gray-800 pb-6">
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
             <div>
                 <h1 class="text-4xl font-black tracking-widest text-white">ALL ODDS</h1>
-                <p class="text-neon-accent text-sm tracking-widest mt-1 font-semibold">ENGINEERED BY FENG INDUSTRIES</p>
+                <p class="text-neon-accent text-xs tracking-widest mt-1 font-semibold uppercase">Prediction Engine | FENG Industries</p>
             </div>
-            <div class="mt-4 md:mt-0 text-gray-500 text-sm border border-gray-800 px-4 py-2 rounded bg-obsidian-surface">
-                System Status: <span class="text-green-500">Live</span>
+            <div class="text-right hidden md:block">
+                <p class="text-xs text-gray-500 mb-1">Take your generated portfolio slip to your preferred bookmaker.</p>
+                <div class="flex gap-2 justify-end text-xs text-gray-400 font-mono">
+                    <span class="bg-obsidian-surface px-2 py-1 rounded border border-gray-800">SportyBet</span>
+                    <span class="bg-obsidian-surface px-2 py-1 rounded border border-gray-800">1xBet</span>
+                    <span class="bg-obsidian-surface px-2 py-1 rounded border border-gray-800">Bet9ja</span>
+                </div>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <section class="bg-obsidian-surface p-6 md:p-8 rounded-xl border border-gray-800 shadow-2xl">
-                <h2 class="text-2xl mb-6 font-semibold text-white">Universal Converter</h2>
+            <div class="lg:col-span-4 flex flex-col gap-4 h-[85vh]">
                 
-                <label class="block text-sm mb-2 text-gray-400">Original Booking Code</label>
-                <input type="text" id="slipCode" placeholder="Paste Code (e.g. BC-SPORTY-XYZ)" 
-                    class="w-full p-4 rounded bg-obsidian-base border border-gray-700 focus:outline-none focus:border-neon-accent mb-6 text-white uppercase transition-colors" />
-
-                <label class="block text-sm mb-2 text-gray-400">Target Platform</label>
-                <select id="targetBookie" class="w-full p-4 rounded bg-obsidian-base border border-gray-700 focus:outline-none focus:border-neon-accent mb-8 text-white">
-                    <option value="Bet9ja">Bet9ja</option>
-                    <option value="1xBet">1xBet</option>
-                    <option value="SportyBet">SportyBet</option>
-                </select>
-
-                <button onclick="convertCode()" id="convertBtn" 
-                    class="w-full py-4 rounded bg-neon-accent text-obsidian-base font-bold text-lg transition-all glow-button">
-                    Generate Universal Code
-                </button>
-
-                <div id="outputBox" class="hidden mt-8 p-6 border border-neon-accent rounded bg-obsidian-base text-center fade-in">
-                    <p class="text-sm text-gray-400 mb-2">Your Native <span id="displayTarget"></span> Code:</p>
-                    <p id="generatedCode" class="text-3xl font-mono text-neon-accent tracking-widest font-bold"></p>
+                <div class="bg-obsidian-surface p-4 rounded-xl border border-gray-800 shadow-xl">
+                    <div class="flex gap-2 mb-4">
+                        <button onclick="filterDay('Today')" id="btn-Today" class="flex-1 py-2 text-sm font-bold rounded bg-neon-accent text-obsidian-base transition-colors">Today</button>
+                        <button onclick="filterDay('Tomorrow')" id="btn-Tomorrow" class="flex-1 py-2 text-sm font-bold rounded bg-obsidian-base border border-gray-700 text-gray-400 hover:text-white transition-colors">Tomorrow</button>
+                    </div>
+                    <select id="leagueFilter" onchange="applyFilters()" class="w-full bg-obsidian-base border border-gray-700 rounded p-2 text-sm text-white focus:outline-none focus:border-neon-accent">
+                        <option value="All">All Leagues</option>
+                        <option value="Premier League">Premier League</option>
+                        <option value="La Liga">La Liga</option>
+                        <option value="Serie A">Serie A</option>
+                        <option value="Champions League">Champions League</option>
+                    </select>
                 </div>
-            </section>
 
-            <section class="bg-obsidian-surface p-6 md:p-8 rounded-xl border border-gray-800 shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-semibold text-white">AI Match Scripts</h2>
-                    <button onclick="loadAI()" id="loadAiBtn" class="text-neon-accent hover:underline text-sm font-semibold">
-                        Load Featured Match
+                <div class="bg-obsidian-surface p-4 rounded-xl border border-gray-800 shadow-xl flex-1 overflow-y-auto">
+                    <div id="fixturesList" class="space-y-3">
+                        </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 bg-obsidian-surface p-6 rounded-xl border border-gray-800 h-[85vh] overflow-y-auto shadow-2xl relative">
+                <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+                    <h2 class="text-lg font-bold text-white">Betting Markets</h2>
+                    <span id="aiTipBadge" class="hidden bg-purple-600/20 text-purple-400 border border-purple-500/50 px-3 py-1 rounded text-xs font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer hover:bg-purple-600/40 transition-colors" onclick="applyAiTip()">
+                        ⚡ FENG AI Tip
+                    </span>
+                </div>
+                
+                <div id="emptyMarketState" class="absolute inset-0 flex items-center justify-center text-gray-500 p-6 text-center text-sm">
+                    Select a match from the daily fixtures to view odds and AI predictions.
+                </div>
+
+                <div id="marketsContainer" class="hidden space-y-6 mt-4">
+                    <div>
+                        <h3 class="text-xs text-gray-400 mb-2 uppercase tracking-wide">Match Winner (1X2)</h3>
+                        <div class="grid grid-cols-3 gap-2" id="market-1x2"></div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xs text-gray-400 mb-2 uppercase tracking-wide">Total Goals (Over/Under)</h3>
+                        <div class="grid grid-cols-2 gap-2" id="market-ou"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 bg-obsidian-surface p-4 rounded-xl border border-neon-accent/30 shadow-[0_0_15px_rgba(0,255,204,0.1)] h-[85vh] flex flex-col relative">
+                <h2 class="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">Prediction Portfolio</h2>
+                
+                <div id="slipItems" class="flex-1 overflow-y-auto space-y-3 mb-4 pr-1">
+                    <p id="emptySlipMsg" class="text-sm text-gray-500 text-center mt-10">Your portfolio is empty. Add predictions to calculate potential returns.</p>
+                </div>
+
+                <div class="border-t border-gray-700 pt-4 mt-auto">
+                    <div class="flex justify-between text-sm mb-2 text-gray-400">
+                        <span>Combined Odds:</span>
+                        <span id="totalOddsText" class="text-white font-mono font-bold">0.00</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="text-xs text-gray-400 block mb-1">Stake Amount (₦)</label>
+                        <input type="number" id="stakeInput" value="1000" min="100" class="w-full bg-obsidian-base border border-gray-700 rounded p-2 text-white focus:outline-none focus:border-neon-accent transition-colors font-mono">
+                    </div>
+
+                    <div class="flex justify-between items-center mb-4 bg-obsidian-base p-3 rounded border border-gray-800">
+                        <span class="text-sm text-gray-400">Potential Return:</span>
+                        <span id="payoutText" class="text-neon-accent font-mono font-bold text-lg">₦0.00</span>
+                    </div>
+
+                    <button onclick="copyPortfolio()" class="w-full py-3 rounded bg-neon-accent text-obsidian-base font-bold hover:bg-neon-hover transition-colors shadow-[0_0_10px_rgba(0,255,204,0.4)] text-sm uppercase tracking-wide">
+                        Copy to Clipboard
                     </button>
                 </div>
-
-                <div id="emptyState" class="h-64 flex items-center justify-center border-2 border-dashed border-gray-800 rounded">
-                    <p class="text-gray-600 text-sm text-center px-4">Awaiting FENG AI Initialization...<br>Click 'Load Featured Match' to begin.</p>
-                </div>
-
-                <div id="aiOutput" class="hidden space-y-6 fade-in">
-                    <h3 class="text-xl font-bold border-l-4 border-neon-accent pl-3 text-white">The Blueprint: Arsenal vs Manchester City</h3>
-                    
-                    <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
-                        <p><strong class="text-neon-accent block mb-1">ACT I: THE SETUP</strong> Arsenal enters the Emirates carrying heavy momentum. They will utilize a relentless high press to suffocate the midfield.</p>
-                        <p><strong class="text-neon-accent block mb-1">ACT II: THE CONFLICT</strong> The battle will be won on the flanks. The wingers are over-performing their Expected Goals (xG) by 15%. Expect defensive desperation tackles in the final third.</p>
-                        <p><strong class="text-neon-accent block mb-1">ACT III: THE VERDICT</strong> The data suggests a chaotic, high-tempo game. Home advantage points toward early goals.</p>
-                    </div>
-
-                    <div class="pt-6 border-t border-gray-800">
-                        <p class="text-sm text-gray-500 mb-3 uppercase tracking-wider font-semibold">Generated Market Slips</p>
-                        
-                        <div class="flex justify-between items-center bg-obsidian-base p-4 rounded mb-2 border border-gray-800 hover:border-gray-600 transition-colors cursor-pointer">
-                            <span class="text-white text-sm">Over 2.5 Total Goals</span>
-                            <span class="text-neon-accent font-mono bg-obsidian-surface px-3 py-1 rounded font-bold">1.65</span>
-                        </div>
-                        
-                        <div class="flex justify-between items-center bg-obsidian-base p-4 rounded mb-2 border border-gray-800 hover:border-gray-600 transition-colors cursor-pointer">
-                            <span class="text-white text-sm">Arsenal Over 4.5 Corners</span>
-                            <span class="text-neon-accent font-mono bg-obsidian-surface px-3 py-1 rounded font-bold">1.80</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            </div>
 
         </div>
     </div>
 
     <script>
-        // Simulates the Python Backend Translation Engine
-        function convertCode() {
-            const input = document.getElementById('slipCode').value;
-            const target = document.getElementById('targetBookie').value;
-            const btn = document.getElementById('convertBtn');
-            const outputBox = document.getElementById('outputBox');
+        // --- 1. Master Database (Simulating Daily API Fetch) ---
+        const masterMatches = [
+            // Premier League
+            { id: 1, day: "Today", league: "Premier League", home: "Arsenal", away: "Aston Villa", time: "17:30", aiTip: { market: "O2.5", label: "Over 2.5", odds: 1.65 }, odds: { "1": 1.45, "X": 4.50, "2": 6.80, "O1.5": 1.15, "U1.5": 4.80, "O2.5": 1.65, "U2.5": 2.25, "O3.5": 2.50, "U3.5": 1.50 } },
+            { id: 2, day: "Today", league: "Premier League", home: "Chelsea", away: "Spurs", time: "20:00", aiTip: { market: "1", label: "Home (1)", odds: 2.10 }, odds: { "1": 2.10, "X": 3.60, "2": 3.20, "O1.5": 1.18, "U1.5": 4.50, "O2.5": 1.55, "U2.5": 2.40, "O3.5": 2.30, "U3.5": 1.60 } },
+            { id: 3, day: "Tomorrow", league: "Premier League", home: "Man United", away: "Liverpool", time: "16:30", aiTip: { market: "2", label: "Away (2)", odds: 1.95 }, odds: { "1": 3.40, "X": 3.80, "2": 1.95, "O2.5": 1.50, "U2.5": 2.50, "O3.5": 2.20, "U3.5": 1.65 } },
             
-            if(!input) {
-                alert("Please paste a booking code first.");
+            // La Liga
+            { id: 4, day: "Today", league: "La Liga", home: "Real Madrid", away: "Sevilla", time: "21:00", aiTip: { market: "1", label: "Home (1)", odds: 1.35 }, odds: { "1": 1.35, "X": 5.20, "2": 8.50, "O1.5": 1.12, "U1.5": 5.50, "O2.5": 1.45, "U2.5": 2.70 } },
+            { id: 5, day: "Tomorrow", league: "La Liga", home: "Barcelona", away: "Atletico Madrid", time: "20:45", aiTip: { market: "U2.5", label: "Under 2.5", odds: 1.85 }, odds: { "1": 2.20, "X": 3.20, "2": 3.40, "O1.5": 1.25, "U1.5": 3.80, "O2.5": 1.90, "U2.5": 1.85 } },
+
+            // Serie A
+            { id: 6, day: "Today", league: "Serie A", home: "Juventus", away: "AC Milan", time: "19:45", aiTip: { market: "X", label: "Draw (X)", odds: 3.10 }, odds: { "1": 2.60, "X": 3.10, "2": 2.90, "O1.5": 1.40, "U1.5": 2.80, "O2.5": 2.20, "U2.5": 1.65 } },
+            { id: 7, day: "Tomorrow", league: "Serie A", home: "Inter", away: "Roma", time: "14:00", aiTip: { market: "1", label: "Home (1)", odds: 1.75 }, odds: { "1": 1.75, "X": 3.80, "2": 4.50, "O2.5": 1.80, "U2.5": 1.95 } },
+            
+            // Champions League
+            { id: 8, day: "Tomorrow", league: "Champions League", home: "Bayern Munich", away: "PSG", time: "20:00", aiTip: { market: "O3.5", label: "Over 3.5", odds: 2.15 }, odds: { "1": 1.90, "X": 4.00, "2": 3.50, "O2.5": 1.40, "U2.5": 2.90, "O3.5": 2.15, "U3.5": 1.68 } }
+        ];
+
+        let activeDay = "Today";
+        let activeMatchId = null;
+        let portfolio = {}; 
+
+        // --- 2. Filtering Logic ---
+        function filterDay(day) {
+            activeDay = day;
+            
+            // Update button styles
+            const btnToday = document.getElementById('btn-Today');
+            const btnTomorrow = document.getElementById('btn-Tomorrow');
+            
+            if (day === 'Today') {
+                btnToday.className = "flex-1 py-2 text-sm font-bold rounded bg-neon-accent text-obsidian-base transition-colors";
+                btnTomorrow.className = "flex-1 py-2 text-sm font-bold rounded bg-obsidian-base border border-gray-700 text-gray-400 hover:text-white transition-colors";
+            } else {
+                btnTomorrow.className = "flex-1 py-2 text-sm font-bold rounded bg-neon-accent text-obsidian-base transition-colors";
+                btnToday.className = "flex-1 py-2 text-sm font-bold rounded bg-obsidian-base border border-gray-700 text-gray-400 hover:text-white transition-colors";
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const leagueFilter = document.getElementById('leagueFilter').value;
+            const list = document.getElementById('fixturesList');
+            list.innerHTML = '';
+
+            const filteredMatches = masterMatches.filter(m => 
+                m.day === activeDay && 
+                (leagueFilter === "All" || m.league === leagueFilter)
+            );
+
+            if(filteredMatches.length === 0) {
+                list.innerHTML = `<p class="text-sm text-gray-500 text-center mt-4">No fixtures found for these filters.</p>`;
                 return;
             }
 
-            // UI Loading State
-            btn.innerText = "Translating Markets...";
-            btn.classList.add("opacity-75");
-            outputBox.classList.add("hidden");
-
-            // Simulate server processing time (1.5 seconds)
-            setTimeout(() => {
-                // Generate a fake but realistic-looking code for the portfolio
-                const prefix = target === 'Bet9ja' ? 'B9' : target === '1xBet' ? '1X' : 'SP';
-                const randomHash = Math.random().toString(36).substring(2, 6).toUpperCase();
-                const newCode = `${prefix}-${randomHash}-99A`;
-
-                document.getElementById('displayTarget').innerText = target;
-                document.getElementById('generatedCode').innerText = newCode;
+            filteredMatches.forEach(match => {
+                const isSelected = activeMatchId === match.id;
+                const hasBetInPortfolio = portfolio[match.id] !== undefined;
                 
-                outputBox.classList.remove("hidden");
-                btn.innerText = "Generate Universal Code";
-                btn.classList.remove("opacity-75");
-            }, 1500);
+                const div = document.createElement('div');
+                div.className = `p-3 rounded border cursor-pointer transition-all ${isSelected ? 'border-neon-accent bg-obsidian-base' : 'border-gray-800 bg-obsidian-base hover:border-gray-600'}`;
+                div.onclick = () => loadMarkets(match.id);
+                
+                div.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs text-gray-500">${match.league} • ${match.time}</span>
+                        ${hasBetInPortfolio ? `<span class="h-2 w-2 rounded-full bg-neon-accent shadow-[0_0_5px_rgba(0,255,204,0.8)]"></span>` : ''}
+                    </div>
+                    <div class="font-bold text-white flex justify-between text-sm">
+                        <span>${match.home}</span>
+                        <span class="text-gray-600 text-xs mt-1">vs</span>
+                        <span>${match.away}</span>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
         }
 
-        // Simulates the AI Match Scripting Engine
-        function loadAI() {
-            const btn = document.getElementById('loadAiBtn');
-            const emptyState = document.getElementById('emptyState');
-            const aiOutput = document.getElementById('aiOutput');
+        // --- 3. Market Loading & AI Integration ---
+        function loadMarkets(matchId) {
+            activeMatchId = matchId;
+            applyFilters(); 
+            
+            const match = masterMatches.find(m => m.id === matchId);
+            document.getElementById('emptyMarketState').classList.add('hidden');
+            document.getElementById('marketsContainer').classList.remove('hidden');
+            
+            // Show AI Tip Badge
+            const aiBadge = document.getElementById('aiTipBadge');
+            if(match.aiTip) {
+                aiBadge.classList.remove('hidden');
+            } else {
+                aiBadge.classList.add('hidden');
+            }
 
-            btn.innerText = "Analyzing Live Data...";
-            btn.disabled = true;
+            const market1x2 = document.getElementById('market-1x2');
+            const marketOU = document.getElementById('market-ou');
+            market1x2.innerHTML = '';
+            marketOU.innerHTML = '';
 
-            // Simulate AI processing time
-            setTimeout(() => {
-                emptyState.classList.add("hidden");
-                aiOutput.classList.remove("hidden");
-                btn.innerText = "Data Loaded Successfully";
-                btn.classList.replace("text-neon-accent", "text-green-500");
-            }, 2000);
+            const matchName = `${match.home} vs ${match.away}`;
+
+            const createBtn = (label, oddsVal, marketKey) => {
+                const isActive = portfolio[matchId] && portfolio[matchId].marketKey === marketKey;
+                const isAiPick = match.aiTip && match.aiTip.market === marketKey;
+                
+                const btn = document.createElement('button');
+                btn.className = `p-3 rounded border flex flex-col items-center justify-center transition-all relative overflow-hidden ${isActive ? 'border-neon-accent bg-neon-accent/10 text-neon-accent shadow-[inset_0_0_10px_rgba(0,255,204,0.2)]' : 'border-gray-700 bg-obsidian-base text-gray-300 hover:border-gray-500'}`;
+                btn.onclick = () => toggleSelection(matchId, matchName, label, oddsVal, marketKey);
+                
+                btn.innerHTML = `
+                    ${isAiPick ? '<div class="absolute top-0 right-0 w-0 h-0 border-t-[20px] border-l-[20px] border-t-purple-500 border-l-transparent"></div>' : ''}
+                    <span class="text-xs mb-1 font-semibold">${label}</span>
+                    <span class="font-mono font-bold ${isActive ? 'text-neon-accent' : 'text-white'}">${oddsVal.toFixed(2)}</span>
+                `;
+                return btn;
+            };
+
+            if(match.odds["1"]) market1x2.appendChild(createBtn("Home (1)", match.odds["1"], "1"));
+            if(match.odds["X"]) market1x2.appendChild(createBtn("Draw (X)", match.odds["X"], "X"));
+            if(match.odds["2"]) market1x2.appendChild(createBtn("Away (2)", match.odds["2"], "2"));
+
+            const ouLines = ["0.5", "1.5", "2.5", "3.5", "4.5"];
+            ouLines.forEach(line => {
+                if(match.odds[`O${line}`]) {
+                    marketOU.appendChild(createBtn(`Over ${line}`, match.odds[`O${line}`], `O${line}`));
+                    marketOU.appendChild(createBtn(`Under ${line}`, match.odds[`U${line}`], `U${line}`));
+                }
+            });
         }
+
+        function applyAiTip() {
+            if(!activeMatchId) return;
+            const match = masterMatches.find(m => m.id === activeMatchId);
+            if(match && match.aiTip) {
+                const matchName = `${match.home} vs ${match.away}`;
+                toggleSelection(activeMatchId, matchName, match.aiTip.label, match.aiTip.odds, match.aiTip.market);
+            }
+        }
+
+        // --- 4. Portfolio Management ---
+        function toggleSelection(matchId, matchName, marketLabel, odds, marketKey) {
+            if (portfolio[matchId] && portfolio[matchId].marketKey === marketKey) {
+                delete portfolio[matchId];
+            } else {
+                portfolio[matchId] = { matchName, marketLabel, odds, marketKey };
+            }
+            loadMarkets(activeMatchId); 
+            updatePortfolio(); 
+        }
+
+        function removeSelection(matchId) {
+            delete portfolio[matchId];
+            if(activeMatchId === matchId) loadMarkets(matchId);
+            updatePortfolio();
+        }
+
+        function updatePortfolio() {
+            const slipItems = document.getElementById('slipItems');
+            const emptyMsg = document.getElementById('emptySlipMsg');
+            const stake = parseFloat(document.getElementById('stakeInput').value) || 0;
+            
+            slipItems.innerHTML = '';
+            
+            const keys = Object.keys(portfolio);
+            if (keys.length === 0) {
+                slipItems.appendChild(emptyMsg);
+                document.getElementById('totalOddsText').innerText = "0.00";
+                document.getElementById('payoutText').innerText = "₦0.00";
+                emptyMsg.classList.remove('hidden');
+                applyFilters(); // Remove dots from fixtures list
+                return;
+            }
+
+            emptyMsg.classList.add('hidden');
+            let totalOdds = 1;
+
+            keys.forEach(id => {
+                const bet = portfolio[id];
+                totalOdds *= bet.odds; 
+
+                const div = document.createElement('div');
+                div.className = 'bg-obsidian-base p-3 rounded border border-gray-800 relative';
+                div.innerHTML = `
+                    <button onclick="removeSelection(${id})" class="absolute top-2 right-2 text-gray-600 hover:text-red-400 font-bold">&times;</button>
+                    <div class="text-xs text-gray-500 mb-1 truncate pr-4">${bet.matchName}</div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-bold text-white">${bet.marketLabel}</span>
+                        <span class="text-neon-accent font-mono bg-obsidian-surface px-2 py-1 rounded text-sm border border-gray-800">${bet.odds.toFixed(2)}</span>
+                    </div>
+                `;
+                slipItems.appendChild(div);
+            });
+
+            const potentialReturn = totalOdds * stake;
+
+            document.getElementById('totalOddsText').innerText = totalOdds.toFixed(2);
+            document.getElementById('payoutText').innerText = '₦' + potentialReturn.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            
+            applyFilters(); // Update dots on fixtures list
+        }
+
+        function copyPortfolio() {
+            const keys = Object.keys(portfolio);
+            if(keys.length === 0) {
+                alert("Your portfolio is empty.");
+                return;
+            }
+            
+            let textToCopy = "🔥 FENG Industries Prediction Portfolio 🔥\n\n";
+            keys.forEach(id => {
+                const b = portfolio[id];
+                textToCopy += `⚽ ${b.matchName}\n🎯 Market: ${b.marketLabel} (@${b.odds.toFixed(2)})\n\n`;
+            });
+            
+            const odds = document.getElementById('totalOddsText').innerText;
+            const stake = document.getElementById('stakeInput').value;
+            const payout = document.getElementById('payoutText').innerText;
+            
+            textToCopy += `📊 Total Odds: ${odds}\n💰 Stake: ₦${stake}\n🚀 Potential Return: ${payout}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("Portfolio copied! You can now paste this into your notes or share it.");
+            });
+        }
+
+        document.getElementById('stakeInput').addEventListener('input', updatePortfolio);
+
+        // Initialize App
+        applyFilters();
     </script>
 </body>
-                  </html>
+</html>
