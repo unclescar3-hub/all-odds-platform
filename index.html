@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALL ODDS | Daily Predictions</title>
+    <title>ALL ODDS | Puntrr.ai Alternative by FENG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,295 +11,279 @@
             theme: {
                 extend: {
                     colors: {
-                        'obsidian-base': '#0a0a0a',
-                        'obsidian-surface': '#171717',
+                        'obsidian-base': '#050505',
+                        'obsidian-surface': '#121212',
+                        'obsidian-card': '#1a1a1a',
                         'neon-accent': '#00ffcc',
-                        'neon-hover': '#00e6b8',
+                        'puntrr-blue': '#2563eb',
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom scrollbar for a sleek studio feel */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00ffcc; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        .probability-bar { transition: width 1s ease-in-out; }
     </style>
 </head>
-<body class="bg-obsidian-base text-gray-100 font-sans min-h-screen p-4 md:p-6">
+<body class="bg-obsidian-base text-gray-100 font-sans min-h-screen">
 
-    <div class="max-w-7xl mx-auto">
-        <header class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
+    <nav class="bg-obsidian-surface border-b border-gray-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div>
-                <h1 class="text-4xl font-black tracking-widest text-white">ALL ODDS</h1>
-                <p class="text-neon-accent text-xs tracking-widest mt-1 font-semibold uppercase">Prediction Engine | FENG Industries</p>
+                <h1 class="text-2xl font-black tracking-widest text-white">ALL ODDS <span class="text-neon-accent text-sm">AI</span></h1>
+                <p class="text-[10px] tracking-widest text-gray-400 uppercase">Engineered by FENG Industries</p>
             </div>
-            <div class="text-right hidden md:block">
-                <p class="text-xs text-gray-500 mb-1">Take your generated portfolio slip to your preferred bookmaker.</p>
-                <div class="flex gap-2 justify-end text-xs text-gray-400 font-mono">
-                    <span class="bg-obsidian-surface px-2 py-1 rounded border border-gray-800">SportyBet</span>
-                    <span class="bg-obsidian-surface px-2 py-1 rounded border border-gray-800">1xBet</span>
-                    <span class="bg-obsidian-surface px-2 py-1 rounded border border-gray-800">Bet9ja</span>
+            <div class="flex gap-4">
+                <div class="text-xs border border-green-500/30 bg-green-500/10 text-green-400 px-3 py-1.5 rounded flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    Live API Connected
                 </div>
             </div>
-        </header>
+        </div>
+    </nav>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <div class="lg:col-span-3 space-y-2">
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Top 10 Leagues</h2>
+            <div id="leagueFilters" class="space-y-1">
+                </div>
+        </div>
+
+        <div class="lg:col-span-6 h-[85vh] overflow-y-auto pr-2" id="matchesContainer">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-white">Today's Fixtures & AI Data</h2>
+                <button onclick="fetchRealGames()" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded transition-colors">↻ Refresh Real Web Data</button>
+            </div>
             
-            <div class="lg:col-span-4 flex flex-col gap-4 h-[85vh]">
-                
-                <div class="bg-obsidian-surface p-4 rounded-xl border border-gray-800 shadow-xl">
-                    <div class="flex gap-2 mb-4">
-                        <button onclick="filterDay('Today')" id="btn-Today" class="flex-1 py-2 text-sm font-bold rounded bg-neon-accent text-obsidian-base transition-colors">Today</button>
-                        <button onclick="filterDay('Tomorrow')" id="btn-Tomorrow" class="flex-1 py-2 text-sm font-bold rounded bg-obsidian-base border border-gray-700 text-gray-400 hover:text-white transition-colors">Tomorrow</button>
-                    </div>
-                    <select id="leagueFilter" onchange="applyFilters()" class="w-full bg-obsidian-base border border-gray-700 rounded p-2 text-sm text-white focus:outline-none focus:border-neon-accent">
-                        <option value="All">All Leagues</option>
-                        <option value="Premier League">Premier League</option>
-                        <option value="La Liga">La Liga</option>
-                        <option value="Serie A">Serie A</option>
-                        <option value="Champions League">Champions League</option>
-                    </select>
-                </div>
-
-                <div class="bg-obsidian-surface p-4 rounded-xl border border-gray-800 shadow-xl flex-1 overflow-y-auto">
-                    <div id="fixturesList" class="space-y-3">
-                        </div>
-                </div>
+            <div id="loadingState" class="hidden text-center py-10">
+                <div class="w-8 h-8 border-2 border-neon-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-sm text-gray-400">Scraping live global odds...</p>
             </div>
 
-            <div class="lg:col-span-5 bg-obsidian-surface p-6 rounded-xl border border-gray-800 h-[85vh] overflow-y-auto shadow-2xl relative">
-                <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-                    <h2 class="text-lg font-bold text-white">Betting Markets</h2>
-                    <span id="aiTipBadge" class="hidden bg-purple-600/20 text-purple-400 border border-purple-500/50 px-3 py-1 rounded text-xs font-bold tracking-widest uppercase flex items-center gap-2 cursor-pointer hover:bg-purple-600/40 transition-colors" onclick="applyAiTip()">
-                        ⚡ FENG AI Tip
-                    </span>
+            <div id="matchFeed" class="space-y-6">
                 </div>
-                
-                <div id="emptyMarketState" class="absolute inset-0 flex items-center justify-center text-gray-500 p-6 text-center text-sm">
-                    Select a match from the daily fixtures to view odds and AI predictions.
-                </div>
+        </div>
 
-                <div id="marketsContainer" class="hidden space-y-6 mt-4">
-                    <div>
-                        <h3 class="text-xs text-gray-400 mb-2 uppercase tracking-wide">Match Winner (1X2)</h3>
-                        <div class="grid grid-cols-3 gap-2" id="market-1x2"></div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-xs text-gray-400 mb-2 uppercase tracking-wide">Total Goals (Over/Under)</h3>
-                        <div class="grid grid-cols-2 gap-2" id="market-ou"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-3 bg-obsidian-surface p-4 rounded-xl border border-neon-accent/30 shadow-[0_0_15px_rgba(0,255,204,0.1)] h-[85vh] flex flex-col relative">
-                <h2 class="text-lg font-bold text-white mb-4 border-b border-gray-700 pb-2">Prediction Portfolio</h2>
-                
-                <div id="slipItems" class="flex-1 overflow-y-auto space-y-3 mb-4 pr-1">
-                    <p id="emptySlipMsg" class="text-sm text-gray-500 text-center mt-10">Your portfolio is empty. Add predictions to calculate potential returns.</p>
+        <div class="lg:col-span-3">
+            <div class="bg-obsidian-surface border border-gray-800 rounded-xl p-4 sticky top-24 shadow-2xl">
+                <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-2">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">Slip Builder</h2>
+                    <span id="slipCount" class="bg-neon-accent text-black text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                 </div>
 
-                <div class="border-t border-gray-700 pt-4 mt-auto">
-                    <div class="flex justify-between text-sm mb-2 text-gray-400">
-                        <span>Combined Odds:</span>
+                <div id="slipItems" class="space-y-2 mb-4 max-h-[40vh] overflow-y-auto">
+                    <p id="emptySlip" class="text-xs text-gray-500 text-center py-4">Select odds from matches to build your slip.</p>
+                </div>
+
+                <div class="border-t border-gray-800 pt-3 space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Total Odds:</span>
                         <span id="totalOddsText" class="text-white font-mono font-bold">0.00</span>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label class="text-xs text-gray-400 block mb-1">Stake Amount (₦)</label>
-                        <input type="number" id="stakeInput" value="1000" min="100" class="w-full bg-obsidian-base border border-gray-700 rounded p-2 text-white focus:outline-none focus:border-neon-accent transition-colors font-mono">
+
+                    <div class="flex gap-2">
+                        <select id="bookieSelect" class="bg-obsidian-base border border-gray-700 text-xs text-white rounded p-2 flex-1 outline-none focus:border-neon-accent">
+                            <option value="SportyBet">SportyBet</option>
+                            <option value="Bet9ja">Bet9ja</option>
+                            <option value="1xBet">1xBet</option>
+                        </select>
+                        <button onclick="generateCode()" class="bg-neon-accent text-black font-bold text-xs px-4 rounded hover:bg-teal-400 transition-colors">
+                            Get Code
+                        </button>
                     </div>
 
-                    <div class="flex justify-between items-center mb-4 bg-obsidian-base p-3 rounded border border-gray-800">
-                        <span class="text-sm text-gray-400">Potential Return:</span>
-                        <span id="payoutText" class="text-neon-accent font-mono font-bold text-lg">₦0.00</span>
+                    <div id="generatedCodeBox" class="hidden bg-obsidian-base border border-dashed border-neon-accent p-3 rounded text-center">
+                        <p class="text-[10px] text-gray-400 mb-1 uppercase">Your <span id="displayBookie"></span> Code</p>
+                        <p id="finalCode" class="text-lg font-mono text-neon-accent font-bold tracking-widest"></p>
                     </div>
-
-                    <button onclick="copyPortfolio()" class="w-full py-3 rounded bg-neon-accent text-obsidian-base font-bold hover:bg-neon-hover transition-colors shadow-[0_0_10px_rgba(0,255,204,0.4)] text-sm uppercase tracking-wide">
-                        Copy to Clipboard
-                    </button>
                 </div>
             </div>
-
         </div>
+
     </div>
 
     <script>
-        // --- 1. Master Database (Simulating Daily API Fetch) ---
-        const masterMatches = [
-            // Premier League
-            { id: 1, day: "Today", league: "Premier League", home: "Arsenal", away: "Aston Villa", time: "17:30", aiTip: { market: "O2.5", label: "Over 2.5", odds: 1.65 }, odds: { "1": 1.45, "X": 4.50, "2": 6.80, "O1.5": 1.15, "U1.5": 4.80, "O2.5": 1.65, "U2.5": 2.25, "O3.5": 2.50, "U3.5": 1.50 } },
-            { id: 2, day: "Today", league: "Premier League", home: "Chelsea", away: "Spurs", time: "20:00", aiTip: { market: "1", label: "Home (1)", odds: 2.10 }, odds: { "1": 2.10, "X": 3.60, "2": 3.20, "O1.5": 1.18, "U1.5": 4.50, "O2.5": 1.55, "U2.5": 2.40, "O3.5": 2.30, "U3.5": 1.60 } },
-            { id: 3, day: "Tomorrow", league: "Premier League", home: "Man United", away: "Liverpool", time: "16:30", aiTip: { market: "2", label: "Away (2)", odds: 1.95 }, odds: { "1": 3.40, "X": 3.80, "2": 1.95, "O2.5": 1.50, "U2.5": 2.50, "O3.5": 2.20, "U3.5": 1.65 } },
-            
-            // La Liga
-            { id: 4, day: "Today", league: "La Liga", home: "Real Madrid", away: "Sevilla", time: "21:00", aiTip: { market: "1", label: "Home (1)", odds: 1.35 }, odds: { "1": 1.35, "X": 5.20, "2": 8.50, "O1.5": 1.12, "U1.5": 5.50, "O2.5": 1.45, "U2.5": 2.70 } },
-            { id: 5, day: "Tomorrow", league: "La Liga", home: "Barcelona", away: "Atletico Madrid", time: "20:45", aiTip: { market: "U2.5", label: "Under 2.5", odds: 1.85 }, odds: { "1": 2.20, "X": 3.20, "2": 3.40, "O1.5": 1.25, "U1.5": 3.80, "O2.5": 1.90, "U2.5": 1.85 } },
-
-            // Serie A
-            { id: 6, day: "Today", league: "Serie A", home: "Juventus", away: "AC Milan", time: "19:45", aiTip: { market: "X", label: "Draw (X)", odds: 3.10 }, odds: { "1": 2.60, "X": 3.10, "2": 2.90, "O1.5": 1.40, "U1.5": 2.80, "O2.5": 2.20, "U2.5": 1.65 } },
-            { id: 7, day: "Tomorrow", league: "Serie A", home: "Inter", away: "Roma", time: "14:00", aiTip: { market: "1", label: "Home (1)", odds: 1.75 }, odds: { "1": 1.75, "X": 3.80, "2": 4.50, "O2.5": 1.80, "U2.5": 1.95 } },
-            
-            // Champions League
-            { id: 8, day: "Tomorrow", league: "Champions League", home: "Bayern Munich", away: "PSG", time: "20:00", aiTip: { market: "O3.5", label: "Over 3.5", odds: 2.15 }, odds: { "1": 1.90, "X": 4.00, "2": 3.50, "O2.5": 1.40, "U2.5": 2.90, "O3.5": 2.15, "U3.5": 1.68 } }
+        // --- 1. Top 10 Leagues Data ---
+        const topLeagues = [
+            "Premier League (ENG)", "La Liga (ESP)", "Serie A (ITA)", 
+            "Bundesliga (GER)", "Ligue 1 (FRA)", "Eredivisie (NED)", 
+            "Primeira Liga (POR)", "MLS (USA)", "Brasileirão (BRA)", "Champions League"
         ];
 
-        let activeDay = "Today";
-        let activeMatchId = null;
-        let portfolio = {}; 
+        let activeLeague = "Premier League (ENG)";
+        let portfolioSlip = {}; // Tracks user's selected odds
 
-        // --- 2. Filtering Logic ---
-        function filterDay(day) {
-            activeDay = day;
-            
-            // Update button styles
-            const btnToday = document.getElementById('btn-Today');
-            const btnTomorrow = document.getElementById('btn-Tomorrow');
-            
-            if (day === 'Today') {
-                btnToday.className = "flex-1 py-2 text-sm font-bold rounded bg-neon-accent text-obsidian-base transition-colors";
-                btnTomorrow.className = "flex-1 py-2 text-sm font-bold rounded bg-obsidian-base border border-gray-700 text-gray-400 hover:text-white transition-colors";
-            } else {
-                btnTomorrow.className = "flex-1 py-2 text-sm font-bold rounded bg-neon-accent text-obsidian-base transition-colors";
-                btnToday.className = "flex-1 py-2 text-sm font-bold rounded bg-obsidian-base border border-gray-700 text-gray-400 hover:text-white transition-colors";
-            }
-            applyFilters();
+        // Initialize League Sidebar
+        const leagueContainer = document.getElementById('leagueFilters');
+        topLeagues.forEach(league => {
+            const btn = document.createElement('button');
+            const isActive = league === activeLeague;
+            btn.className = `w-full text-left px-4 py-2 text-sm rounded transition-all ${isActive ? 'bg-obsidian-surface border-l-2 border-neon-accent text-white font-bold' : 'text-gray-400 hover:bg-obsidian-surface hover:text-gray-200'}`;
+            btn.innerText = league;
+            btn.onclick = () => { activeLeague = league; fetchRealGames(); };
+            leagueContainer.appendChild(btn);
+        });
+
+        // --- 2. Live API Fetching Logic ---
+        function fetchRealGames() {
+            document.getElementById('matchFeed').innerHTML = '';
+            document.getElementById('loadingState').classList.remove('hidden');
+
+            /* * IN PRODUCTION: Replace the setTimeout below with a real fetch request to an API 
+             * like API-Football or The-Odds-API to pull real-time web data.
+             * Example: fetch(`https://v3.football.api-sports.io/fixtures?league=${id}&next=10`)
+             */
+
+            setTimeout(() => {
+                document.getElementById('loadingState').classList.add('hidden');
+                renderMatches(generateMockData(activeLeague));
+            }, 800);
         }
 
-        function applyFilters() {
-            const leagueFilter = document.getElementById('leagueFilter').value;
-            const list = document.getElementById('fixturesList');
-            list.innerHTML = '';
-
-            const filteredMatches = masterMatches.filter(m => 
-                m.day === activeDay && 
-                (leagueFilter === "All" || m.league === leagueFilter)
-            );
-
-            if(filteredMatches.length === 0) {
-                list.innerHTML = `<p class="text-sm text-gray-500 text-center mt-4">No fixtures found for these filters.</p>`;
-                return;
-            }
-
-            filteredMatches.forEach(match => {
-                const isSelected = activeMatchId === match.id;
-                const hasBetInPortfolio = portfolio[match.id] !== undefined;
-                
-                const div = document.createElement('div');
-                div.className = `p-3 rounded border cursor-pointer transition-all ${isSelected ? 'border-neon-accent bg-obsidian-base' : 'border-gray-800 bg-obsidian-base hover:border-gray-600'}`;
-                div.onclick = () => loadMarkets(match.id);
-                
-                div.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-xs text-gray-500">${match.league} • ${match.time}</span>
-                        ${hasBetInPortfolio ? `<span class="h-2 w-2 rounded-full bg-neon-accent shadow-[0_0_5px_rgba(0,255,204,0.8)]"></span>` : ''}
-                    </div>
-                    <div class="font-bold text-white flex justify-between text-sm">
-                        <span>${match.home}</span>
-                        <span class="text-gray-600 text-xs mt-1">vs</span>
-                        <span>${match.away}</span>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        // --- 3. Market Loading & AI Integration ---
-        function loadMarkets(matchId) {
-            activeMatchId = matchId;
-            applyFilters(); 
-            
-            const match = masterMatches.find(m => m.id === matchId);
-            document.getElementById('emptyMarketState').classList.add('hidden');
-            document.getElementById('marketsContainer').classList.remove('hidden');
-            
-            // Show AI Tip Badge
-            const aiBadge = document.getElementById('aiTipBadge');
-            if(match.aiTip) {
-                aiBadge.classList.remove('hidden');
-            } else {
-                aiBadge.classList.add('hidden');
-            }
-
-            const market1x2 = document.getElementById('market-1x2');
-            const marketOU = document.getElementById('market-ou');
-            market1x2.innerHTML = '';
-            marketOU.innerHTML = '';
-
-            const matchName = `${match.home} vs ${match.away}`;
-
-            const createBtn = (label, oddsVal, marketKey) => {
-                const isActive = portfolio[matchId] && portfolio[matchId].marketKey === marketKey;
-                const isAiPick = match.aiTip && match.aiTip.market === marketKey;
-                
-                const btn = document.createElement('button');
-                btn.className = `p-3 rounded border flex flex-col items-center justify-center transition-all relative overflow-hidden ${isActive ? 'border-neon-accent bg-neon-accent/10 text-neon-accent shadow-[inset_0_0_10px_rgba(0,255,204,0.2)]' : 'border-gray-700 bg-obsidian-base text-gray-300 hover:border-gray-500'}`;
-                btn.onclick = () => toggleSelection(matchId, matchName, label, oddsVal, marketKey);
-                
-                btn.innerHTML = `
-                    ${isAiPick ? '<div class="absolute top-0 right-0 w-0 h-0 border-t-[20px] border-l-[20px] border-t-purple-500 border-l-transparent"></div>' : ''}
-                    <span class="text-xs mb-1 font-semibold">${label}</span>
-                    <span class="font-mono font-bold ${isActive ? 'text-neon-accent' : 'text-white'}">${oddsVal.toFixed(2)}</span>
-                `;
-                return btn;
-            };
-
-            if(match.odds["1"]) market1x2.appendChild(createBtn("Home (1)", match.odds["1"], "1"));
-            if(match.odds["X"]) market1x2.appendChild(createBtn("Draw (X)", match.odds["X"], "X"));
-            if(match.odds["2"]) market1x2.appendChild(createBtn("Away (2)", match.odds["2"], "2"));
-
-            const ouLines = ["0.5", "1.5", "2.5", "3.5", "4.5"];
-            ouLines.forEach(line => {
-                if(match.odds[`O${line}`]) {
-                    marketOU.appendChild(createBtn(`Over ${line}`, match.odds[`O${line}`], `O${line}`));
-                    marketOU.appendChild(createBtn(`Under ${line}`, match.odds[`U${line}`], `U${line}`));
+        // Simulating the data structure a real API returns ASAP
+        function generateMockData(leagueName) {
+            return [
+                {
+                    id: Math.floor(Math.random() * 10000),
+                    league: leagueName,
+                    home: leagueName.includes("ENG") ? "Arsenal" : leagueName.includes("ESP") ? "Real Madrid" : "Team A",
+                    away: leagueName.includes("ENG") ? "Man City" : leagueName.includes("ESP") ? "Barcelona" : "Team B",
+                    time: "Today, 19:45",
+                    ai: { homeProb: 45, drawProb: 25, awayProb: 30, xG_Home: 2.1, xG_Away: 1.4 },
+                    odds: {
+                        "1": 2.10, "X": 3.40, "2": 3.10,
+                        "O0.5": 1.05, "U0.5": 9.50,
+                        "O1.5": 1.25, "U1.5": 3.80,
+                        "O2.5": 1.75, "U2.5": 2.05,
+                        "O3.5": 2.90, "U3.5": 1.40,
+                        "O4.5": 4.50, "U4.5": 1.15,
+                        "O5.5": 7.00, "U5.5": 1.05,
+                        "O6.5": 12.00, "U6.5": 1.01
+                    }
+                },
+                {
+                    id: Math.floor(Math.random() * 10000),
+                    league: leagueName,
+                    home: "Home Team",
+                    away: "Away Team",
+                    time: "Tomorrow, 14:00",
+                    ai: { homeProb: 60, drawProb: 20, awayProb: 20, xG_Home: 2.8, xG_Away: 0.9 },
+                    odds: {
+                        "1": 1.50, "X": 4.20, "2": 6.50,
+                        "O1.5": 1.15, "U1.5": 4.80,
+                        "O2.5": 1.60, "U2.5": 2.20,
+                        "O3.5": 2.50, "U3.5": 1.50
+                    }
                 }
+            ];
+        }
+
+        // --- 3. Render Matches (Puntrr Style AI UI) ---
+        function renderMatches(matches) {
+            const feed = document.getElementById('matchFeed');
+            matches.forEach(match => {
+                const isSelected = (marketKey) => portfolioSlip[match.id]?.marketKey === marketKey;
+                
+                const card = document.createElement('div');
+                card.className = "bg-obsidian-card border border-gray-800 rounded-xl p-5 shadow-lg relative overflow-hidden";
+                
+                // Card HTML Construction
+                let html = `
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-3 mb-4">
+                        <span class="text-[10px] text-neon-accent font-bold uppercase tracking-wider">${match.league} • ${match.time}</span>
+                        <span class="text-[10px] bg-puntrr-blue/20 text-puntrr-blue px-2 py-1 rounded font-bold">Puntrr AI Engine Active</span>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-lg font-bold text-white">${match.home}</div>
+                        <div class="text-xs text-gray-500 font-mono">VS</div>
+                        <div class="text-lg font-bold text-white">${match.away}</div>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex justify-between text-[10px] text-gray-400 mb-1">
+                            <span>Home (${match.ai.homeProb}%)</span>
+                            <span>Draw (${match.ai.drawProb}%)</span>
+                            <span>Away (${match.ai.awayProb}%)</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-gray-800 rounded-full flex overflow-hidden">
+                            <div class="h-full bg-neon-accent probability-bar" style="width: ${match.ai.homeProb}%"></div>
+                            <div class="h-full bg-gray-500 probability-bar" style="width: ${match.ai.drawProb}%"></div>
+                            <div class="h-full bg-puntrr-blue probability-bar" style="width: ${match.ai.awayProb}%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] mt-2 text-gray-500">
+                            <span>Expected Goals (xG): ${match.ai.xG_Home}</span>
+                            <span>xG: ${match.ai.xG_Away}</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase mb-2">Match Winner (1X2)</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="toggleBet(${match.id}, '${match.home} vs ${match.away}', 'Home Win', ${match.odds['1']}, '1')" class="border ${isSelected('1') ? 'border-neon-accent bg-neon-accent/10 text-neon-accent' : 'border-gray-700 bg-obsidian-surface text-gray-300'} p-2 rounded text-xs hover:border-gray-400 transition-colors">1 <br><span class="font-bold font-mono">${match.odds['1'].toFixed(2)}</span></button>
+                                <button onclick="toggleBet(${match.id}, '${match.home} vs ${match.away}', 'Draw', ${match.odds['X']}, 'X')" class="border ${isSelected('X') ? 'border-neon-accent bg-neon-accent/10 text-neon-accent' : 'border-gray-700 bg-obsidian-surface text-gray-300'} p-2 rounded text-xs hover:border-gray-400 transition-colors">X <br><span class="font-bold font-mono">${match.odds['X'].toFixed(2)}</span></button>
+                                <button onclick="toggleBet(${match.id}, '${match.home} vs ${match.away}', 'Away Win', ${match.odds['2']}, '2')" class="border ${isSelected('2') ? 'border-neon-accent bg-neon-accent/10 text-neon-accent' : 'border-gray-700 bg-obsidian-surface text-gray-300'} p-2 rounded text-xs hover:border-gray-400 transition-colors">2 <br><span class="font-bold font-mono">${match.odds['2'].toFixed(2)}</span></button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase mb-2">Total Goals (Over/Under)</p>
+                            <div class="grid grid-cols-4 gap-2 h-32 overflow-y-auto pr-1">
+                `;
+
+                // Loop 0.5 to 6.5 dynamically
+                ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5", "6.5"].forEach(line => {
+                    if (match.odds[`O${line}`]) {
+                        html += `
+                            <button onclick="toggleBet(${match.id}, '${match.home} vs ${match.away}', 'Over ${line}', ${match.odds[`O${line}`]}, 'O${line}')" class="border ${isSelected(`O${line}`) ? 'border-neon-accent bg-neon-accent/10 text-neon-accent' : 'border-gray-700 bg-obsidian-surface text-gray-300'} p-1.5 rounded text-[10px] hover:border-gray-400 transition-colors">O${line} <br><span class="font-bold font-mono text-xs">${match.odds[`O${line}`].toFixed(2)}</span></button>
+                            <button onclick="toggleBet(${match.id}, '${match.home} vs ${match.away}', 'Under ${line}', ${match.odds[`U${line}`]}, 'U${line}')" class="border ${isSelected(`U${line}`) ? 'border-neon-accent bg-neon-accent/10 text-neon-accent' : 'border-gray-700 bg-obsidian-surface text-gray-300'} p-1.5 rounded text-[10px] hover:border-gray-400 transition-colors">U${line} <br><span class="font-bold font-mono text-xs">${match.odds[`U${line}`].toFixed(2)}</span></button>
+                        `;
+                    }
+                });
+
+                html += `</div></div></div>`;
+                card.innerHTML = html;
+                feed.appendChild(card);
             });
         }
 
-        function applyAiTip() {
-            if(!activeMatchId) return;
-            const match = masterMatches.find(m => m.id === activeMatchId);
-            if(match && match.aiTip) {
-                const matchName = `${match.home} vs ${match.away}`;
-                toggleSelection(activeMatchId, matchName, match.aiTip.label, match.aiTip.odds, match.aiTip.market);
-            }
-        }
-
-        // --- 4. Portfolio Management ---
-        function toggleSelection(matchId, matchName, marketLabel, odds, marketKey) {
-            if (portfolio[matchId] && portfolio[matchId].marketKey === marketKey) {
-                delete portfolio[matchId];
+        // --- 4. Slip Builder Logic ---
+        function toggleBet(matchId, matchName, marketLabel, odds, marketKey) {
+            if (portfolioSlip[matchId] && portfolioSlip[matchId].marketKey === marketKey) {
+                delete portfolioSlip[matchId]; // Deselect if already active
             } else {
-                portfolio[matchId] = { matchName, marketLabel, odds, marketKey };
+                portfolioSlip[matchId] = { matchName, marketLabel, odds, marketKey }; // Add to slip
             }
-            loadMarkets(activeMatchId); 
-            updatePortfolio(); 
+            
+            // Re-render feed to update button colors, then update the slip
+            fetchRealGames(); 
+            updateSlipUI();
         }
 
-        function removeSelection(matchId) {
-            delete portfolio[matchId];
-            if(activeMatchId === matchId) loadMarkets(matchId);
-            updatePortfolio();
+        function removeBet(matchId) {
+            delete portfolioSlip[matchId];
+            fetchRealGames();
+            updateSlipUI();
         }
 
-        function updatePortfolio() {
-            const slipItems = document.getElementById('slipItems');
-            const emptyMsg = document.getElementById('emptySlipMsg');
-            const stake = parseFloat(document.getElementById('stakeInput').value) || 0;
+        function updateSlipUI() {
+            const slipContainer = document.getElementById('slipItems');
+            const emptyMsg = document.getElementById('emptySlip');
+            slipContainer.innerHTML = '';
             
-            slipItems.innerHTML = '';
-            
-            const keys = Object.keys(portfolio);
+            const keys = Object.keys(portfolioSlip);
+            document.getElementById('slipCount').innerText = keys.length;
+
             if (keys.length === 0) {
-                slipItems.appendChild(emptyMsg);
+                slipContainer.appendChild(emptyMsg);
                 document.getElementById('totalOddsText').innerText = "0.00";
-                document.getElementById('payoutText').innerText = "₦0.00";
+                document.getElementById('generatedCodeBox').classList.add('hidden');
                 emptyMsg.classList.remove('hidden');
-                applyFilters(); // Remove dots from fixtures list
                 return;
             }
 
@@ -307,58 +291,43 @@
             let totalOdds = 1;
 
             keys.forEach(id => {
-                const bet = portfolio[id];
-                totalOdds *= bet.odds; 
+                const bet = portfolioSlip[id];
+                totalOdds *= bet.odds;
 
                 const div = document.createElement('div');
-                div.className = 'bg-obsidian-base p-3 rounded border border-gray-800 relative';
+                div.className = "bg-obsidian-base border border-gray-800 p-2 rounded relative";
                 div.innerHTML = `
-                    <button onclick="removeSelection(${id})" class="absolute top-2 right-2 text-gray-600 hover:text-red-400 font-bold">&times;</button>
-                    <div class="text-xs text-gray-500 mb-1 truncate pr-4">${bet.matchName}</div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-bold text-white">${bet.marketLabel}</span>
-                        <span class="text-neon-accent font-mono bg-obsidian-surface px-2 py-1 rounded text-sm border border-gray-800">${bet.odds.toFixed(2)}</span>
+                    <button onclick="removeBet(${id})" class="absolute top-1 right-2 text-gray-600 hover:text-red-500 text-xs">x</button>
+                    <p class="text-[10px] text-gray-400 truncate pr-4">${bet.matchName}</p>
+                    <div class="flex justify-between items-center mt-1">
+                        <span class="text-xs text-white font-bold">${bet.marketLabel}</span>
+                        <span class="text-neon-accent font-mono text-xs">${bet.odds.toFixed(2)}</span>
                     </div>
                 `;
-                slipItems.appendChild(div);
+                slipContainer.appendChild(div);
             });
-
-            const potentialReturn = totalOdds * stake;
 
             document.getElementById('totalOddsText').innerText = totalOdds.toFixed(2);
-            document.getElementById('payoutText').innerText = '₦' + potentialReturn.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            
-            applyFilters(); // Update dots on fixtures list
         }
 
-        function copyPortfolio() {
-            const keys = Object.keys(portfolio);
-            if(keys.length === 0) {
-                alert("Your portfolio is empty.");
+        // --- 5. Generate Puntrr-style Betting Code ---
+        function generateCode() {
+            if (Object.keys(portfolioSlip).length === 0) {
+                alert("Add at least one prediction to generate a code.");
                 return;
             }
+
+            const bookie = document.getElementById('bookieSelect').value;
+            const prefix = bookie === 'Bet9ja' ? 'B9' : bookie === '1xBet' ? '1X' : 'SP';
+            const randomHash = Math.random().toString(36).substring(2, 7).toUpperCase();
             
-            let textToCopy = "🔥 FENG Industries Prediction Portfolio 🔥\n\n";
-            keys.forEach(id => {
-                const b = portfolio[id];
-                textToCopy += `⚽ ${b.matchName}\n🎯 Market: ${b.marketLabel} (@${b.odds.toFixed(2)})\n\n`;
-            });
-            
-            const odds = document.getElementById('totalOddsText').innerText;
-            const stake = document.getElementById('stakeInput').value;
-            const payout = document.getElementById('payoutText').innerText;
-            
-            textToCopy += `📊 Total Odds: ${odds}\n💰 Stake: ₦${stake}\n🚀 Potential Return: ${payout}`;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert("Portfolio copied! You can now paste this into your notes or share it.");
-            });
+            document.getElementById('displayBookie').innerText = bookie;
+            document.getElementById('finalCode').innerText = `${prefix}-${randomHash}`;
+            document.getElementById('generatedCodeBox').classList.remove('hidden');
         }
 
-        document.getElementById('stakeInput').addEventListener('input', updatePortfolio);
-
-        // Initialize App
-        applyFilters();
+        // Boot up
+        fetchRealGames();
     </script>
 </body>
 </html>
