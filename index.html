@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALL ODDS | Powered by FENG Industries</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'obsidian-base': '#0a0a0a',
+                        'obsidian-surface': '#171717',
+                        'neon-accent': '#00ffcc',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom glowing effects for the Uncle Scar Studio aesthetic */
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-obsidian-base text-gray-100 font-sans min-h-screen p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-gray-800 pb-6">
+            <div>
+                <h1 class="text-4xl font-black tracking-widest text-white">ALL ODDS</h1>
+                <p class="text-neon-accent text-sm tracking-widest mt-1 font-semibold">ENGINEERED BY FENG INDUSTRIES</p>
+            </div>
+            <div class="mt-4 md:mt-0 text-gray-500 text-sm border border-gray-800 px-4 py-2 rounded bg-obsidian-surface">
+                System Status: <span class="text-green-500">Live</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <section class="bg-obsidian-surface p-6 md:p-8 rounded-xl border border-gray-800 shadow-2xl">
+                <h2 class="text-2xl mb-6 font-semibold text-white">Universal Converter</h2>
+                
+                <label class="block text-sm mb-2 text-gray-400">Original Booking Code</label>
+                <input type="text" id="slipCode" placeholder="Paste Code (e.g. BC-SPORTY-XYZ)" 
+                    class="w-full p-4 rounded bg-obsidian-base border border-gray-700 focus:outline-none focus:border-neon-accent mb-6 text-white uppercase transition-colors" />
+
+                <label class="block text-sm mb-2 text-gray-400">Target Platform</label>
+                <select id="targetBookie" class="w-full p-4 rounded bg-obsidian-base border border-gray-700 focus:outline-none focus:border-neon-accent mb-8 text-white">
+                    <option value="Bet9ja">Bet9ja</option>
+                    <option value="1xBet">1xBet</option>
+                    <option value="SportyBet">SportyBet</option>
+                </select>
+
+                <button onclick="convertCode()" id="convertBtn" 
+                    class="w-full py-4 rounded bg-neon-accent text-obsidian-base font-bold text-lg transition-all glow-button">
+                    Generate Universal Code
+                </button>
+
+                <div id="outputBox" class="hidden mt-8 p-6 border border-neon-accent rounded bg-obsidian-base text-center fade-in">
+                    <p class="text-sm text-gray-400 mb-2">Your Native <span id="displayTarget"></span> Code:</p>
+                    <p id="generatedCode" class="text-3xl font-mono text-neon-accent tracking-widest font-bold"></p>
+                </div>
+            </section>
+
+            <section class="bg-obsidian-surface p-6 md:p-8 rounded-xl border border-gray-800 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-white">AI Match Scripts</h2>
+                    <button onclick="loadAI()" id="loadAiBtn" class="text-neon-accent hover:underline text-sm font-semibold">
+                        Load Featured Match
+                    </button>
+                </div>
+
+                <div id="emptyState" class="h-64 flex items-center justify-center border-2 border-dashed border-gray-800 rounded">
+                    <p class="text-gray-600 text-sm text-center px-4">Awaiting FENG AI Initialization...<br>Click 'Load Featured Match' to begin.</p>
+                </div>
+
+                <div id="aiOutput" class="hidden space-y-6 fade-in">
+                    <h3 class="text-xl font-bold border-l-4 border-neon-accent pl-3 text-white">The Blueprint: Arsenal vs Manchester City</h3>
+                    
+                    <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+                        <p><strong class="text-neon-accent block mb-1">ACT I: THE SETUP</strong> Arsenal enters the Emirates carrying heavy momentum. They will utilize a relentless high press to suffocate the midfield.</p>
+                        <p><strong class="text-neon-accent block mb-1">ACT II: THE CONFLICT</strong> The battle will be won on the flanks. The wingers are over-performing their Expected Goals (xG) by 15%. Expect defensive desperation tackles in the final third.</p>
+                        <p><strong class="text-neon-accent block mb-1">ACT III: THE VERDICT</strong> The data suggests a chaotic, high-tempo game. Home advantage points toward early goals.</p>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-800">
+                        <p class="text-sm text-gray-500 mb-3 uppercase tracking-wider font-semibold">Generated Market Slips</p>
+                        
+                        <div class="flex justify-between items-center bg-obsidian-base p-4 rounded mb-2 border border-gray-800 hover:border-gray-600 transition-colors cursor-pointer">
+                            <span class="text-white text-sm">Over 2.5 Total Goals</span>
+                            <span class="text-neon-accent font-mono bg-obsidian-surface px-3 py-1 rounded font-bold">1.65</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center bg-obsidian-base p-4 rounded mb-2 border border-gray-800 hover:border-gray-600 transition-colors cursor-pointer">
+                            <span class="text-white text-sm">Arsenal Over 4.5 Corners</span>
+                            <span class="text-neon-accent font-mono bg-obsidian-surface px-3 py-1 rounded font-bold">1.80</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        // Simulates the Python Backend Translation Engine
+        function convertCode() {
+            const input = document.getElementById('slipCode').value;
+            const target = document.getElementById('targetBookie').value;
+            const btn = document.getElementById('convertBtn');
+            const outputBox = document.getElementById('outputBox');
+            
+            if(!input) {
+                alert("Please paste a booking code first.");
+                return;
+            }
+
+            // UI Loading State
+            btn.innerText = "Translating Markets...";
+            btn.classList.add("opacity-75");
+            outputBox.classList.add("hidden");
+
+            // Simulate server processing time (1.5 seconds)
+            setTimeout(() => {
+                // Generate a fake but realistic-looking code for the portfolio
+                const prefix = target === 'Bet9ja' ? 'B9' : target === '1xBet' ? '1X' : 'SP';
+                const randomHash = Math.random().toString(36).substring(2, 6).toUpperCase();
+                const newCode = `${prefix}-${randomHash}-99A`;
+
+                document.getElementById('displayTarget').innerText = target;
+                document.getElementById('generatedCode').innerText = newCode;
+                
+                outputBox.classList.remove("hidden");
+                btn.innerText = "Generate Universal Code";
+                btn.classList.remove("opacity-75");
+            }, 1500);
+        }
+
+        // Simulates the AI Match Scripting Engine
+        function loadAI() {
+            const btn = document.getElementById('loadAiBtn');
+            const emptyState = document.getElementById('emptyState');
+            const aiOutput = document.getElementById('aiOutput');
+
+            btn.innerText = "Analyzing Live Data...";
+            btn.disabled = true;
+
+            // Simulate AI processing time
+            setTimeout(() => {
+                emptyState.classList.add("hidden");
+                aiOutput.classList.remove("hidden");
+                btn.innerText = "Data Loaded Successfully";
+                btn.classList.replace("text-neon-accent", "text-green-500");
+            }, 2000);
+        }
+    </script>
+</body>
+                  </html>
